@@ -1,39 +1,19 @@
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import parse from "html-react-parser";
 import Container from "@material-ui/core/Container";
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import api from "core/services/apiService";
 import useStyles from "./styles";
 import { QuizConfirmation } from "./components/QuizConfirmation";
 import { QuizContainer } from "./components/QuizContainer";
-import { QuizResult } from "./components/QuizResult";
-
-interface IQuestionResponse {
-  category: string;
-  type: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-  question: string;
-  difficulty: string;
-};
+import { QuizLoading } from "./components/QuizLoading";
+import { parseHtmlToString } from "shared/utils/parseHtmlToString";
+import { IQuestionResponse } from "shared/interfaces/IQuestionResponse";
+import { IQuestionStorage, IAnswerStorage } from "shared/interfaces/AnswerStorage";
 
 interface IQuestionProps extends Omit<IQuestionResponse, "incorrect_answers" | "correct_answer"> {
   correctAnswer: string;
   answers: string[];
-};
-
-interface ILocalStorageData {
-  errors: number;
-  hits: number;
-  isFinalized: boolean,
-  questions: Array<{
-    question: string;
-    correctAnswer: string;
-    selectedAnswer: string;
-    isFinalized: boolean;
-  }>;
 };
 
 enum State {
@@ -53,7 +33,7 @@ export function QuizPage() {
   const [state, setState] = useState<string>(State.LOADING);
 
   const saveLocalStorage = () => {
-    const data: ILocalStorageData = {
+    const data: IAnswerStorage = {
       errors: 0,
       hits: 0,
       isFinalized: false,
@@ -78,14 +58,14 @@ export function QuizPage() {
         const { data } = response;
         const formatedQuestions: IQuestionProps[] = (data.results as IQuestionResponse[]).map((question: IQuestionResponse) => {
           const allAnswersFormated = [...question.incorrect_answers, question.correct_answer]
-            .map(answer => parse(answer) as string)
+            .map(answer => parseHtmlToString(answer))
             .sort((a,b) => a.localeCompare(b))
           return {
             type: question.type,
             category: question.category,
             difficulty: question.difficulty,
-            question: parse(question.question) as string,
-            correctAnswer: parse(question.correct_answer) as string,
+            question: parseHtmlToString(question.question),
+            correctAnswer: parseHtmlToString(question.correct_answer) as string,
             answers: allAnswersFormated
           };
         });
@@ -94,14 +74,13 @@ export function QuizPage() {
         setCurrentQuestion(formatedQuestions[currentIndex]);
       }
     }
-    history.replace({ pathname: location.pathname, state: undefined });
   }
 
   const handleClickContinueButton = (questionTitle: string, selectedAnswer: string, correctAnswer: string) => {
     const newCurrentIndex = currentIndex + 1;
     const data = localStorage.getItem("app-askme:quiz");
     if (data) {
-      const storedData = JSON.parse(data) as ILocalStorageData;
+      const storedData = JSON.parse(data) as IAnswerStorage;
       storedData.isFinalized = newCurrentIndex === storedData.questions.length ? true : false;
       if (selectedAnswer === correctAnswer) {
         storedData.hits++;
@@ -109,7 +88,7 @@ export function QuizPage() {
       else {
         storedData.errors++;
       }
-      const updatedQuestions = storedData.questions.map(question => {
+      const updatedQuestions = storedData.questions.map((question: IQuestionStorage) => {
         if (question.question === questionTitle) {
           return {
             ...question,
@@ -135,12 +114,8 @@ export function QuizPage() {
     }
   }
 
-  const handleChangeRadio = (value: string) => {
-    console.log(value);
-  }
-
   useEffect(() => {
-    document.title = "Questões";
+    document.title = "Questions";
     setState(State.CONFIRM);
   }, []);
 
@@ -150,9 +125,21 @@ export function QuizPage() {
     }
   }, [allQuestions]);
 
+  useEffect(() => {
+    if (state === State.FINALIZED) {
+      history.push("/quiz/result");
+    }
+  }, [state, history]);
+
+  useEffect(() => {
+    if (!location.state) {
+      history.push("/");
+    }
+  }, [location, history]);
+
   return (
     <Container maxWidth="md" className={classes.root}>
-      { state === State.LOADING && <CircularProgress /> }
+      { state === State.LOADING && <QuizLoading /> }
       { state === State.CONFIRM && (
           <QuizConfirmation 
             handleClickStartButton={handleClickStartButton} 
@@ -166,13 +153,7 @@ export function QuizPage() {
           currentQuestionNumber={currentIndex + 1}
           totalQuestions={allQuestions.length}
           handleClickContinueButton={handleClickContinueButton}
-          handleChangeRadio={handleChangeRadio}
         />
-      }
-      { state === State.FINALIZED && currentquestion
-        && (
-          <QuizResult />
-        )
       }
     </Container>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline/CssBaseline';
@@ -6,12 +6,18 @@ import CssBaseline from '@material-ui/core/CssBaseline/CssBaseline';
 import App from './App';
 import theme from 'shared/themes/global';
 
+import { LocalStorageContext } from "shared/contexts/LocalStorageContext";
+import { getQuizFromLocalStorage } from "shared/utils/getQuizFromLocalStorage";
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
+  <StrictMode>
+    <LocalStorageContext.Provider value={{ getQuizFromLocalStorage }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </LocalStorageContext.Provider>
+  </StrictMode>,
   document.getElementById('wrapper')
 );

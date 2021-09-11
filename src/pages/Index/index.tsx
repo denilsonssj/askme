@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button/Button";
 import Typography from "@material-ui/core/Typography/Typography";
 import Card from "@material-ui/core/Card/Card";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
 import CardContent from "@material-ui/core/CardContent/CardContent";
+import { CardActions } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField/TextField";
+import Link from "@material-ui/core/Link/Link";
 
 import useStyles from "./styles";
+import { LocalStorageContext } from "shared/contexts/LocalStorageContext";
 
 const validationSchema = yup.object({
   totalQuestions: yup
     .number()
     .integer()
-    .positive("Digite um valor válido")
-    .required("Campo é obrigatório")
+    .positive("Type a valid value")
+    .required("Field required")
 });
 
 interface IProps {
@@ -28,6 +31,7 @@ export function IndexPage() {
   const classes = useStyles();
   const history = useHistory();
   const [isPreviewQuiz, setIsPreviewQuiz] = useState<boolean>(false);
+  const { getQuizFromLocalStorage } = useContext(LocalStorageContext);
   const formik = useFormik({
     initialValues: {
       totalQuestions: 1
@@ -43,11 +47,10 @@ export function IndexPage() {
   });
 
   useEffect(() => {
-    document.title = "Página Inicial";
-    const data = localStorage.getItem("app-askme:quiz");
+    document.title = "Askme";
+    const data = getQuizFromLocalStorage();
     if (data) {
-      const storagedData = JSON.parse(data);
-      if (storagedData.isFinalized) {
+      if (data.isFinalized) {
         setIsPreviewQuiz(isPreviewQuiz => !isPreviewQuiz);
       }
     }
@@ -59,19 +62,26 @@ export function IndexPage() {
         <CardHeader 
           className={classes.cardHeader}
           title={
-            <Typography className={classes.title} component="h2" variant="h2">
-              Quiz
+            <Typography
+              className={classes.title}
+              component="h2" 
+              variant="h2"
+            >
+              Askme
             </Typography>
           } 
         />
-        <CardContent className={classes.cardContent}>
+        <CardContent>
           <form noValidate onSubmit={formik.handleSubmit}>
             <TextField
                 fullWidth
+                required
                 type="number"
                 id="totalQuestions"
                 name="totalQuestions"
-                label="Quantidade de Questões"
+                label="Question quantity"
+                placeholder="Type a quantity questions"
+                variant="outlined"
                 value={formik.values.totalQuestions}
                 onChange={formik.handleChange}
                 error={formik.touched.totalQuestions && Boolean(formik.errors.totalQuestions)}
@@ -80,12 +90,28 @@ export function IndexPage() {
             <Button
               type="submit"
               color="primary"
+              variant="contained"
+              className={classes.button}
             >
               Continuar
             </Button>
-            { isPreviewQuiz && (<span>Deseja rever o relatório do quiz anterior?</span>)}
           </form>
         </CardContent>
+        <CardActions className={classes.cardActions}>
+          { isPreviewQuiz && (
+            <Typography component="span" variant="body2" className={classes.footerMessage}>
+              You have solved a quiz previously, if you want to review the result {" "}
+              <Link
+                component={RouterLink}
+                to="/quiz/result"
+                className={classes.link}
+              >
+                click here
+              </Link>.
+            </Typography>
+           )
+          }
+        </CardActions>
       </Card>
     </Container>
   );

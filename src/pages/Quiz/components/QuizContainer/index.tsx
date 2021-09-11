@@ -29,7 +29,6 @@ interface IQuizContainerProps {
   currentQuestionNumber: number;
   totalQuestions: number;
   handleClickContinueButton: (questionTitle: string, selectedAnswer: string, correctAnswer: string) => void;
-  handleChangeRadio: (value: string) => void;
 };
 
 interface IFormData {
@@ -37,16 +36,16 @@ interface IFormData {
 };
 
 const SignupSchema = yup.object().shape({
-  selectedAnswer: yup.string().required("Campo obrigatório!")
+  selectedAnswer: yup.string().required("Required field!")
 });
 
-export function QuizContainer({ question, currentQuestionNumber, totalQuestions, handleClickContinueButton, handleChangeRadio }: IQuizContainerProps) {
+export function QuizContainer({ question, currentQuestionNumber, totalQuestions, handleClickContinueButton }: IQuizContainerProps) {
   const classes = useStyles();
 
   const onSubmit = ({ selectedAnswer }: IFormData, formikHelpers: FormikHelpers<IFormData>) => {
-    console.log(selectedAnswer);
     formikHelpers.setSubmitting(false);
     handleClickContinueButton(question.question, selectedAnswer, question.correctAnswer);
+    formikHelpers.resetForm();
   };
 
   return (
@@ -56,59 +55,59 @@ export function QuizContainer({ question, currentQuestionNumber, totalQuestions,
       />
       <CardContent className={classes.cardContent}>
       <Formik
-                onSubmit={onSubmit}
-                initialValues={{
-                  selectedAnswer: ""
-                }}
-                validationSchema={SignupSchema}
+        onSubmit={onSubmit}
+        initialValues={{
+          selectedAnswer: ""
+        }}
+        validationSchema={SignupSchema}
+      >
+        {({ handleSubmit, errors }) => (
+          <form onSubmit={handleSubmit}>
+            <Grid item xs={12}>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
               >
-                {({ handleSubmit, errors }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Grid item xs={12}>
-                      <FormControl
-                        component="fieldset"
-                        className={classes.formControl}
-                      >
-                        <Field
-                          name="selectedAnswer"
-                          label="Best selectedAnswer"
-                          component={RadioGroup}
-                        >
-                          {
-                            question.answers.map(answer => (
-                              <FormControlLabel
-                                key={answer}
-                                value={answer}
-                                control={<Radio color="primary" />}
-                                label={answer}
-                              />
-                            ))
-                          }
-                          { errors.selectedAnswer && (
-                            <FormHelperText className={classes.formControlHelper}>
-                              {errors.selectedAnswer}
-                            </FormHelperText>
-                          )}
-                        </Field>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
-                  </form>
-                )}
-              </Formik>
+                <Field
+                  name="selectedAnswer"
+                  label="Best selectedAnswer"
+                  component={RadioGroup}
+                >
+                  {
+                    question.answers.map(answer => (
+                      <FormControlLabel
+                        key={answer}
+                        value={answer}
+                        control={<Radio color="primary" />}
+                        label={answer}
+                      />
+                    ))
+                  }
+                  { errors.selectedAnswer && (
+                    <FormHelperText className={classes.formControlHelper}>
+                      {errors.selectedAnswer}
+                    </FormHelperText>
+                  )}
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </form>
+        )}
+      </Formik>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Typography component="span">{currentQuestionNumber} de {totalQuestions} questões</Typography>
+        <Typography component="span">{currentQuestionNumber} of {totalQuestions} questions</Typography>
       </CardActions>
     </Card>
   );

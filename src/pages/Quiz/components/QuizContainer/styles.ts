@@ -1,7 +1,7 @@
 import { red } from '@material-ui/core/colors';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minWidth: 350,
     padding: 20,

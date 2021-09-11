@@ -1,3 +1,4 @@
+import { colors } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +27,28 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     textAlign: "center"
   },
-  title: {
-    fontWeight: 700
+  cardActions: {
+    marginTop: theme.spacing(2)
   },
-  cardContent: {}
+  title: {
+    fontWeight: 700,
+    color: colors.grey[900]
+  },
+  footerMessage: {
+    fontWeight: 500,
+    color: colors.grey[500]
+  },
+  button: {
+    textTransform: "capitalize",
+    marginTop: theme.spacing(4)
+  },
+  link: {
+    color: colors.grey[700],
+
+    "&:hover": {
+      textDecoration: "none",
+    }
+  }
 }));
 
 export default useStyles;
