@@ -9,12 +9,17 @@ const theme = createTheme({
           padding: 0,
           boxSizing: "border-box"
         },
+        body: {
+          width: "100vw",
+          height: "100vh"
+        },
         "#wrapper": {
           width: "100vw",
           height: "100vh",
           display: "flex",
           flexDirection: "column",
-          overflowX: "auto"
+          overflowX: "auto",
+          overflowY: "auto"
         },
         main: {
           width: "100%",
