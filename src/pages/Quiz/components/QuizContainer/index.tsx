@@ -91,7 +91,7 @@ export function QuizContainer({ question, currentQuestionNumber, totalQuestions,
                 </Field>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.gridButton}>
               <Button
                 type="submit"
                 fullWidth

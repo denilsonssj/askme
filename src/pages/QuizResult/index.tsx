@@ -78,17 +78,17 @@ export function QuizResult() {
                   <Paper elevation={0} className={classes.answersPaper}>
                   <Typography component="span">
                     <Typography component="span" className={classes.textImportant}>
-                      Your question:
+                      Your answer:
                     </Typography>
                     {" "}
                     { question.selectedAnswer }
                   </Typography>
                   <Typography component="span">
                     <Typography component="span" className={classes.textImportant}>
-                      Correct question:
+                      Correct answer:
                     </Typography>
                     {" "}
-                    { question.selectedAnswer }
+                    { question.correctAnswer }
                   </Typography>
                   </Paper>
                 </Paper>

@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "row",
     justifyContent: "flex-end"
   },
+  gridButton: {
+    marginTop: 20
+  },
   button: {
     textTransform: "capitalize"
   },
