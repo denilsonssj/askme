@@ -6,31 +6,40 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(10),
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    //height: "100%",
     alignItems: "center"
   },
-  card: {
-    minWidth: 700,
+  paper: {
     padding: theme.spacing(4),
+    maxWidth: 700,
+    height: "100%"
+  },
+  paperContent: {
     width: "100%"
+  },
+  paperItem: {
+    padding: theme.spacing(4),
+    "&:not(first-child)": {
+      marginTop: 20
+    }
   },
   title: {
     textAlign: "center",
     fontWeight: 700
   },
-  message: {
+  subtitle: {
     textAlign: "center",
+    marginTop: 30,
     marginBottom: 30
   },
-  accordion: {
-    marginBottom: 2
+  answerTitle: {
+    paddingTop: 5,
+    marginBottom: 5,
+    fontWeight: 500,
   },
-  accordionDetails: {
+  answersPaper: {
     display: "flex",
-    flexDirection: "column"
-  },
-  incorrectQuestion: {
-    color: red[700],
+    flexDirection: "column",
     fontWeight: 500
   },
   answer: {
@@ -39,14 +48,17 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   correctQuestion: {
-    color: green[700],
-    fontWeight: 500
+    color: green[600],
+  },
+  incorrectQuestion: {
+    color: red[600]
   },
   textImportant: {
     fontWeight: 700
   },
   button: {
-    textTransform: "capitalize"
+    textTransform: "capitalize",
+    marginTop: 30
   }
 }));
 

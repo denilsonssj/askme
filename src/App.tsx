@@ -11,11 +11,13 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Switch>
-        <Route exact path="/" component={IndexPage} />
-        <Route exact path="/quiz" component={QuizPage} />
-        <Route exact path="/quiz/result" component={QuizResult} />
-      </Switch>
+      <main>
+        <Switch>
+          <Route exact path="/" component={IndexPage} />
+          <Route exact path="/quiz" component={QuizPage} />
+          <Route exact path="/quiz/result" component={QuizResult} />
+        </Switch>
+      </main>
       <Footer />
     </BrowserRouter>
   );

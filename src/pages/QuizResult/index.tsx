@@ -1,5 +1,6 @@
 import { Fragment, useState, useEffect,useContext } from "react";
 import { useHistory } from "react-router-dom";
+import clsx from 'clsx';
 import Container from "@material-ui/core/Container/Container";
 import Card from "@material-ui/core/Card/Card";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
@@ -11,6 +12,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from "@material-ui/core/Paper";
 
 import useStyles from "./styles";
 
@@ -37,19 +39,14 @@ export function QuizResult() {
   }, []);
 
   return (
-    <Container maxWidth="sm" className={classes.root}>
-      <Card className={classes.card}>
-      <CardHeader 
-        title={
-          <Typography component="h4" variant="h4" className={classes.title}>
+    <Container className={classes.root}>
+      <Paper className={classes.paper}>
+        <Typography component="h4" variant="h4" className={classes.title}>
             Final Result
-          </Typography>
-        } 
-      />
-      <CardContent>
+        </Typography>
         {result ? (
           <Fragment>
-            <Typography component="h5" variant="h5" className={classes.message}>
+            <Typography component="h5" variant="h5" className={classes.subtitle}>
               You got {" "}
               <Typography 
                 component="span"
@@ -68,52 +65,60 @@ export function QuizResult() {
               </Typography>
               questions right
             </Typography>
+          
+          <Paper elevation={0} className={classes.paperContent}>
             {
               result.questions.map((question, index) => (
-                <Accordion key={question.question} className={classes.accordion}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`${index}-content`}
-                    id={`${index}-header`}
-                  >
-                    <Typography 
-                      className={
-                        question.selectedAnswer === question.correctAnswer ? 
-                          classes.correctQuestion 
-                          :
-                          classes.incorrectQuestion }
-                    >
-                      {`${index + 1} - ${question.question}`}
+                <Paper key={question.question} className={classes.paperItem} elevation={1}>
+                  <Typography
+                    component="h6"
+                    variant="h6"
+                    className={clsx(
+                      classes.answerTitle,
+                      question.selectedAnswer === question.correctAnswer 
+                        ?
+                        classes.correctQuestion
+                        :
+                        classes.incorrectQuestion
+                    )}
+                  > 
+                    { index + 1 } - { question.question }
+                  </Typography>
+                  <Paper elevation={0} className={classes.answersPaper}>
+                  <Typography component="span">
+                    <Typography component="span" className={classes.textImportant}>
+                      Your question:
                     </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails className={classes.accordionDetails}>
-                   <Typography component="p">
-                   <Typography component="span" style={{ fontWeight: 700}}>Correct answer: </Typography> { question.correctAnswer }
+                    {" "}
+                    { question.selectedAnswer }
                   </Typography>
-                  <Typography component="p">
-                    <Typography component="span" style={{ fontWeight: 700}}>Your answer: </Typography> { question.selectedAnswer }
+                  <Typography component="span">
+                    <Typography component="span" className={classes.textImportant}>
+                      Correct question:
+                    </Typography>
+                    {" "}
+                    { question.selectedAnswer }
                   </Typography>
-                </AccordionDetails>
-              </Accordion>
+                  </Paper>
+                </Paper>
               ))
             }
+          </Paper>
           </Fragment>
         ) : (
         <Typography>There are no results to show!</Typography>
         ) 
       }
-      </CardContent>
-      <CardActions>
-        <Button 
-          variant="contained"
-          color="primary"
-          onClick={() => history.push("/")}
-          className={classes.button}
-        >
-          Back to home
-        </Button>
-      </CardActions>
-      </Card>
+
+      <Button 
+        variant="contained"
+        color="primary"
+        onClick={() => history.push("/")}
+        className={classes.button}
+      >
+        Back to home
+      </Button>
+      </Paper>
     </Container>
   );
 }

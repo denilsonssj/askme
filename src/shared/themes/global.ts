@@ -10,20 +10,21 @@ const theme = createTheme({
           boxSizing: "border-box"
         },
         body: {
-          width: "100vw",
-          height: "100vh"
-        },
-        "#wrapper": {
-          width: "100vw",
-          height: "100vh",
           display: "flex",
           flexDirection: "column",
-          overflowX: "auto",
-          overflowY: "auto"
+          minHeight: "100vh",
+          overflowX: "hidden"
+        },
+        "#wrapper": {
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          width: "100vw",
+          minHeight: "100vh",
+          flex: 1
         },
         main: {
-          width: "100%",
-          height: "100%",
+          height: "100%"
         }
       },
     },

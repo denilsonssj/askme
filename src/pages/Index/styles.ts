@@ -6,9 +6,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
-    justifySelf: "center",
-    height: "100vh",
-    width: "100%"
+    justifySelf: "center"
   },
   card: {
     minWidth: 300,
