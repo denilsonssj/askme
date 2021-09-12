@@ -2,20 +2,11 @@ import { Fragment, useState, useEffect,useContext } from "react";
 import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
 import Container from "@material-ui/core/Container/Container";
-import Card from "@material-ui/core/Card/Card";
-import CardHeader from "@material-ui/core/CardHeader/CardHeader";
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from "@material-ui/core/CardContent/CardContent";
 import Button from "@material-ui/core/Button/Button";
 import Typography from "@material-ui/core/Typography/Typography";
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from "@material-ui/core/Paper";
 
 import useStyles from "./styles";
-
 import { LocalStorageContext } from "shared/contexts/LocalStorageContext";
 import { IAnswerStorage } from "shared/interfaces/AnswerStorage";
 
