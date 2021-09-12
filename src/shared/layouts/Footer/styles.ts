@@ -1,3 +1,4 @@
+import { colors } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -11,7 +12,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "auto",
     padding: 20,
   },
-  link: {}
+  text: {
+    color: colors.grey[600]
+  },
+  link: {
+    color: colors.grey[600],
+    "&:hover": {
+      textDecoration: "none"
+    }
+  }
 }));
 
 export default useStyles;
